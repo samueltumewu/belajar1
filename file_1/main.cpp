@@ -1,43 +1,28 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 using namespace std;
 
 void main(){
-	//fstream myfile, part1, part2;
-	//myfile.open("gambar.jpg", ios::binary | ios::in );
+	long size;
+	int mid;
+	char *buffer;
+	string buff;
+	fstream myfile, part1, part2, outfile;
 
-	//if(myfile.is_open()){
-	//	myfile.seekg(0, ios::end);
-	//	double mid = myfile.tellg()/2;
-	//	myfile.seekg(ios::beg);
-	//	//cursor sudah balik ke awal
+	myfile.open("gambar.jpg", ios::binary | ios::in);
+	outfile.open("clone.jpg", ios::binary | ios::out);
+	if(myfile.is_open()){
+		myfile.seekg(0, ios::end);
+		size = myfile.tellg();
+		myfile.seekg(ios::beg);
 
-	//	part1.open("gambar_part1.jpg", ios::binary|ios::out);
-	//	while(myfile.tellg()<mid){
-	//		part1<<myfile;
-	//	}
-	//	part2.open("gambar_part2.jpg", ios::binary|ios::out);
-	//	myfile.seekg(mid);
-	//	while(myfile.tellg()<mid){
-	//		part2<<myfile;
-	//	}
+		buffer = new char[size];
+		while(myfile.read(buffer, size)){
+			outfile.write(buffer, myfile.gcount());
+		}
 
-
-	//	myfile.close();
-	//	
-	//}else{
-	//	cout<<"File gagal dibuka\n";
-	//}
-
-	fstream mainfile, a, b;
-	int mid =0;
-	mainfile.open("coba.txt", ios::binary |ios::in);
-
-	if(mainfile.is_open()){
-		mainfile.seekg(0, ios::end);
-		mid = mainfile.tellg();
-		mainfile.seekg(ios::beg);
-
-	}else
-		cout<<"File gagal\n";
+		myfile.close();
+		outfile.close();
+	}
 }
