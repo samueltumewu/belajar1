@@ -3,6 +3,9 @@
 #include <string>
 using namespace std;
 
+class Split{
+
+};
 void main(){
 	long size;
 	int mid;
