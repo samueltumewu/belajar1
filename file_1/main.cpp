@@ -10,7 +10,7 @@ private:
 	char *buffer;
 	bool isopen;
 	string buff;
-	fstream infile, part1, part2, outfile;
+	fstream infile, part1, part2, parts[5], outfile;
 public:
 	~Split(){
 		if(isopen){
@@ -18,7 +18,6 @@ public:
 		}
 	}
 	Split(){
-		size = 1025;
 	}
 	Split(string namafile){
 		this->namafile = namafile;
@@ -104,9 +103,67 @@ public:
 
 		cout<<"Rejoining File selesai!!!\n";
 	}
+	void join(string outname){
+		outfile.open(outname, ios::binary | ios::out);
+		string addr = "C:/SAMUEL/skiptrace/skrptcecbric31.mkv.00";
+		char a[2];
+		for(int i=1; i<=4; i++){
+			itoa(i,a,10);
+			parts[i].open(addr+a, ios::binary | ios::in);
+			if(!parts[i].is_open())
+			{
+				cout<<"File "<<i<<" Tidak bisa dibuka!.\n";
+				i=100; //keluar loop langsung
+			}
+		}
+
+		for(int i=1; i<=4; i++)
+		{
+			parts[i].seekg(0, ios::end);
+			size = parts[i].tellg();
+			parts[i].seekg(ios::beg);
+
+			buffer = new char[size];
+			outfile.seekg(0, ios::end);
+			while(parts[i].read(buffer, size)){
+				outfile.write(buffer, parts[i].gcount());
+			}
+			delete[] buffer;
+			parts[i].close();
+			cout<<size<<endl;
+		}
+
+		outfile.close();
+		cout<<"SELESAI\n";
+	}
+	void tambah(){
+		outfile.open("c:/samuel/skiptrace.mkv", ios::binary | ios::app);
+		infile.open("c:/samuel/skiptrace/skrptcecbric31.mkv.005", ios::binary | ios::in);
+		
+		infile.seekg(0, ios::end);
+		size = infile.tellg();
+		infile.seekg(ios::beg);
+		
+		buffer = new char[size];
+		outfile.seekg(0, ios::end);
+		while(infile.read(buffer, size)){
+			outfile.write(buffer, infile.gcount());
+		}
+		delete[] buffer;
+		infile.close();
+		outfile.close();
+		cout<<"SELESAI\n";
+	}
 };
+
 void main(){
-	Split split("gambar.jpg");
-	split.split_them();
-	split.join_them();
+	/*
+	Split s("gambar.jpg");
+	s.split_them();
+	s.join_them();
+	*/
+
+	Split s;
+	s.tambah();
+
 }
