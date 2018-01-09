@@ -105,10 +105,10 @@ public:
 	}
 	void join(string outname){
 		outfile.open(outname, ios::binary | ios::out);
-		string addr = "C:/SAMUEL/skiptrace/skrptcecbric31.mkv.00";
+		string addr = "C:/SAMUEL/purge/tprganrchyscbric31.mkv.00";
 		char a[2];
-		for(int i=1; i<=4; i++){
-			itoa(i,a,10);
+		for(int i=0; i<5; i++){
+			itoa(i+1,a,10);
 			parts[i].open(addr+a, ios::binary | ios::in);
 			if(!parts[i].is_open())
 			{
@@ -117,7 +117,7 @@ public:
 			}
 		}
 
-		for(int i=1; i<=4; i++)
+		for(int i=0; i<5; i++)
 		{
 			parts[i].seekg(0, ios::end);
 			size = parts[i].tellg();
@@ -164,6 +164,6 @@ void main(){
 	*/
 
 	Split s;
-	s.tambah();
+	s.join("c:/samuel/purge/ThePurge.mkv");
 
 }
