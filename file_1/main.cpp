@@ -10,11 +10,15 @@ private:
 	char *buffer;
 	bool isopen;
 	string buff;
-	fstream infile, part1, part2, parts[5], outfile;
+	fstream infile, part1, part2, outfile;
+	fstream *parts;
 public:
 	~Split(){
 		if(isopen){
 			infile.close();
+		}
+		if(parts){
+			delete [] parts;
 		}
 	}
 	Split(){
@@ -75,39 +79,12 @@ public:
 			cout<<"File gagal dibuka, cek kembali nama file";
 		}
 	}
-	void join_them(){
-		outfile.open("Hasil_join.jpg", ios::binary | ios::out);
-		part1.open("clone.Part1", ios::binary | ios::in);
-		part2.open("clone.Part2", ios::binary | ios::in); 
-
-		part1.seekg(0, ios::end);
-		size = part1.tellg();
-		part1.seekg(ios::beg);
-		buffer = new char[size];
-		while(part1.read(buffer, size)){
-			outfile.write(buffer, part1.gcount());
-		}
-		delete[] buffer;
-		part1.close();
-
-		outfile.seekg(size+1);
-		part2.seekg(0, ios::end);
-		size = part2.tellg();
-		part2.seekg(ios::beg);
-		buffer = new char[size];
-		while(part2.read(buffer, size)){
-			outfile.write(buffer, part2.gcount());
-		}
-		delete[] buffer;
-		part2.close();
-
-		cout<<"Rejoining File selesai!!!\n";
-	}
-	void join(string outname){
+	void join(string outname, string inname, int jumlah){
 		outfile.open(outname, ios::binary | ios::out);
-		string addr = "C:/SAMUEL/purge/tprganrchyscbric31.mkv.00";
+		string addr = inname + ".00";
 		char a[2];
-		for(int i=0; i<5; i++){
+		parts = new fstream[jumlah];
+		for(int i=0; i<jumlah; i++){
 			itoa(i+1,a,10);
 			parts[i].open(addr+a, ios::binary | ios::in);
 			if(!parts[i].is_open())
@@ -117,7 +94,7 @@ public:
 			}
 		}
 
-		for(int i=0; i<5; i++)
+		for(int i=0; i<jumlah; i++)
 		{
 			parts[i].seekg(0, ios::end);
 			size = parts[i].tellg();
@@ -130,40 +107,40 @@ public:
 			}
 			delete[] buffer;
 			parts[i].close();
-			cout<<size<<endl;
+			printf("FILE %d ON PROGRESS...\n", i+1);
 		}
 
 		outfile.close();
-		cout<<"SELESAI\n";
-	}
-	void tambah(){
-		outfile.open("c:/samuel/skiptrace.mkv", ios::binary | ios::app);
-		infile.open("c:/samuel/skiptrace/skrptcecbric31.mkv.005", ios::binary | ios::in);
-		
-		infile.seekg(0, ios::end);
-		size = infile.tellg();
-		infile.seekg(ios::beg);
-		
-		buffer = new char[size];
-		outfile.seekg(0, ios::end);
-		while(infile.read(buffer, size)){
-			outfile.write(buffer, infile.gcount());
-		}
-		delete[] buffer;
-		infile.close();
-		outfile.close();
-		cout<<"SELESAI\n";
+		cout<<"\n\n---SELESAI---\n";
+
 	}
 };
 
 void main(){
-	/*
-	Split s("gambar.jpg");
-	s.split_them();
-	s.join_them();
-	*/
+	int angka;
+	cout<<"	===================="<<endl;
+	cout<<"	***SELAMAT DATANG***"<<endl<<endl;
+	cout<<"	   PILIHAN  MENU:"<<endl;
+	cout<<"	   1. JOIN FILE"<<endl;
+	cout<<"	   2. SPLIT FILE"<<endl;
+	cout<<"	===================="<<endl;
+	cout<<"MASUKKAN ANGKA PILIHAN: ";
+	cin>>angka;
 
-	Split s;
-	s.join("c:/samuel/purge/ThePurge.mkv");
-
+	if(angka==1){
+		system("CLS");
+		string in, out;
+		int jumlah;
+		cout<<"Masukkan path beserta nama file ASAL dengan format ekst videonya : ";
+		cin>>in;
+		cout<<"Masukkan path beserta nama file TUJUAN dengan format ekst videonya : ";
+		fflush(stdin);
+		cin>>out;
+		cout<<"Masukkan jumlah part file : ";
+		cin>>jumlah;
+		system("CLS");
+		Split s;
+		cout<<"\nLOADING...\n\n";
+		s.join(out,in,jumlah);
+	}
 }
